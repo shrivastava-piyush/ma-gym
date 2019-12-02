@@ -24,7 +24,7 @@ class Switch(gym.Env):
         self._step_cost = step_cost
         self._total_episode_reward = None
 
-        self.action_space = MultiAgentActionSpace([spaces.Discrete(5) for _ in range(self.n_agents)])  # l,r,t,d,noop
+        self.action_space = [spaces.Discrete(5) for _ in range(self.n_agents)]  # l,r,t,d,noop
 
         self.init_agent_pos = {0: [0, 1], 1: [0, self._grid_shape[1] - 2],
                                2: [2, 1], 3: [2, self._grid_shape[1] - 2]}
@@ -43,7 +43,7 @@ class Switch(gym.Env):
         if self.full_observable:
             self._obs_high = np.tile(self._obs_high, self.n_agents)
             self._obs_low = np.tile(self._obs_low, self.n_agents)
-        self.observation_space = MultiAgentObservationSpace([spaces.Box(self._obs_low, self._obs_high) for _ in range(self.n_agents)])
+        self.observation_space = [spaces.Box(self._obs_low, self._obs_high) for _ in range(self.n_agents)]
 
     def get_action_meanings(self, agent_i=None):
         if agent_i is not None:
@@ -84,7 +84,7 @@ class Switch(gym.Env):
             _agent_i_obs = [round(pos[0] / (self._grid_shape[0] - 1), 2),
                             round(pos[1] / (self._grid_shape[1] - 1), 2)]
             # _agent_i_obs += [self._step_count / self._max_steps]  # add current step count (for time reference)
-            _obs.append(_agent_i_obs)
+            _obs.append(np.array(_agent_i_obs))
 
         if self.full_observable:
             _obs = np.array(_obs).flatten().tolist()

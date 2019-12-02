@@ -50,7 +50,7 @@ class PredatorPrey(gym.Env):
         self._prey_capture_reward = prey_capture_reward
         self._agent_view_mask = (5, 5)
 
-        self.action_space = MultiAgentActionSpace([spaces.Discrete(5) for _ in range(self.n_agents)])
+        self.action_space = [spaces.Discrete(5) for _ in range(self.n_agents)]
         self.agent_pos = {_: None for _ in range(self.n_agents)}
         self.prey_pos = {_: None for _ in range(self.n_preys)}
         self._prey_alive = None
@@ -69,7 +69,7 @@ class PredatorPrey(gym.Env):
         if self.full_observable:
             self._obs_high = np.tile(self._obs_high, self.n_agents)
             self._obs_low = np.tile(self._obs_low, self.n_agents)
-        self.observation_space = MultiAgentObservationSpace([spaces.Box(self._obs_low, self._obs_high) for _ in range(self.n_agents)])
+        self.observation_space = [spaces.Box(self._obs_low, self._obs_high) for _ in range(self.n_agents)]
 
         self._total_episode_reward = None
 
@@ -126,7 +126,7 @@ class PredatorPrey(gym.Env):
 
             _agent_i_obs += _prey_pos.flatten().tolist()  # adding prey pos in observable area
             _agent_i_obs += [self._step_count / self._max_steps]  # adding time
-            _obs.append(_agent_i_obs)
+            _obs.append(np.array(_agent_i_obs))
 
         if self.full_observable:
             _obs = np.array(_obs).flatten().tolist()
